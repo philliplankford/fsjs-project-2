@@ -18,7 +18,7 @@ const header = document.querySelector("header");
 const studentList = document.querySelector(".student-list");
 const pagination = document.querySelector(".link-list");
 
-let pageTracker = 0;
+let pageTracker = 1;
 
 /*
 Create the `showPage` function
@@ -30,22 +30,26 @@ function pageAmount(displayPer, totalEntries) {
    return num;
 }
 
-function showPage(pagesPer){
+function showPage(dataList, pageTracker){
+   const startIndex = (pageTracker * displayPerPage) - displayPerPage;
+   const endIndex = pageTracker * displayPerPage;
    let inner = "";
-   for (let i=0; i < pagesPer; i++) {
-      inner +=
-      `
-      <li class="student-item cf">
-         <div class="student-details">
-         <img class="avatar" src=${data[i].picture.thumbnail} alt="Profile Picture">
-         <h3>${data[i].name.first} ${data[i].name.last}</h3>
-         <span class="email">${data[i].email}</span>
-         </div>
-         <div class="joined-details">
-         <span class="date">Joined ${data[i].registered.date}</span>
-         </div>
-      </li>
-      `;
+   for (let i=0; i < dataList.length; i++) {
+      if (i >= startIndex && i < endIndex){
+         inner +=
+         `
+         <li class="student-item cf">
+            <div class="student-details">
+            <img class="avatar" src=${dataList[i].picture.thumbnail} alt="Profile Picture">
+            <h3>${dataList[i].name.first} ${dataList[i].name.last}</h3>
+            <span class="email">${dataList[i].email}</span>
+            </div>
+            <div class="joined-details">
+            <span class="date">Joined ${dataList[i].registered.date}</span>
+            </div>
+         </li>
+         `;
+      }
    }
    studentList.innerHTML = inner;
 }
@@ -90,12 +94,21 @@ function insertSearch(){
 
 // Call functions
 insertSearch();
-showPage(displayPerPage)
+showPage(data, pageTracker)
 addPagination(pageAmount(displayPerPage, dataEntries));
 
 /* 
 Pagination listener
 */
+pagination.addEventListener("click", (e) => {
+   let pages = pagination.children; //targeting a button within the li
+   for (page of pages) {
+      page.classList = "";
+   }
+   e.target.classList = "";
+   pageTracker = parseInt(e.target.textContent);
+   showPage(data, pageTracker);
+});
 
 /* 
 Search filter listener
