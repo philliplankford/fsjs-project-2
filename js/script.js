@@ -52,6 +52,9 @@ function showPage(dataList, pageTracker){
       }
    }
    studentList.innerHTML = inner;
+   if (dataList.length === 0) {
+      studentList.innerHTML = "<p>No Results Found</p>";
+   }
 }
 
 /*
@@ -101,15 +104,35 @@ addPagination(pageAmount(displayPerPage, dataEntries));
 Pagination listener
 */
 pagination.addEventListener("click", (e) => {
-   let pages = pagination.children; //targeting a button within the li
-   for (page of pages) {
-      page.classList = "";
+   if (e.target.tagName === "BUTTON") {
+      const prevActive = document.querySelector(".active");
+      prevActive.classList = "";
+      e.target.classList = "active";
+      pageTracker = parseInt(e.target.textContent);
+      showPage(data, pageTracker);
    }
-   e.target.classList = "";
-   pageTracker = parseInt(e.target.textContent);
-   showPage(data, pageTracker);
 });
 
 /* 
 Search filter listener
 */
+
+const searchBar = document.getElementById("search");
+
+function searchName(database) {
+   const input = searchBar.value.toLowerCase();
+   let newData = [];
+   for ( i = 0; i < database.length; i++ ) {
+      const name = database[i].name.first + database[i].name.last;
+      if ( name.toLowerCase().includes(input) ) {
+         newData.push(database[i]);
+      }
+   }
+   pageTracker = 1; // reset the page tracker
+   showPage(newData, pageTracker);
+   addPagination(pageAmount(displayPerPage, newData.length))
+}
+
+searchBar.addEventListener( "keyup", () => {
+   searchName(data);
+} );
