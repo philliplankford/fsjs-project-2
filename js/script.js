@@ -31,29 +31,30 @@ function pageAmount(displayPer, totalEntries) {
 }
 
 function showPage(dataList, pageTracker){
-   const startIndex = (pageTracker * displayPerPage) - displayPerPage;
-   const endIndex = pageTracker * displayPerPage;
-   let inner = "";
-   for (let i=0; i < dataList.length; i++) {
-      if (i >= startIndex && i < endIndex){
-         inner +=
-         `
-         <li class="student-item cf">
-            <div class="student-details">
-            <img class="avatar" src=${dataList[i].picture.thumbnail} alt="Profile Picture">
-            <h3>${dataList[i].name.first} ${dataList[i].name.last}</h3>
-            <span class="email">${dataList[i].email}</span>
-            </div>
-            <div class="joined-details">
-            <span class="date">Joined ${dataList[i].registered.date}</span>
-            </div>
-         </li>
-         `;
-      }
-   }
-   studentList.innerHTML = inner;
    if (dataList.length === 0) {
       studentList.innerHTML = "<p>No Results Found</p>";
+   } else {
+      const startIndex = (pageTracker * displayPerPage) - displayPerPage;
+      const endIndex = pageTracker * displayPerPage;
+      let inner = "";
+      for (let i=0; i < dataList.length; i++) {
+         if (i >= startIndex && i < endIndex){
+            inner +=
+            `
+            <li class="student-item cf">
+               <div class="student-details">
+               <img class="avatar" src=${dataList[i].picture.thumbnail} alt="Profile Picture">
+               <h3>${dataList[i].name.first} ${dataList[i].name.last}</h3>
+               <span class="email">${dataList[i].email}</span>
+               </div>
+               <div class="joined-details">
+               <span class="date">Joined ${dataList[i].registered.date}</span>
+               </div>
+            </li>
+            `;
+         }
+      }
+      studentList.innerHTML = inner;
    }
 }
 
@@ -90,7 +91,7 @@ function insertSearch(){
    <label for="search" class="student-search"> 
       <span>Search by Name</span> 
       <input id="search" placeholder="Search by name...">
-      <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+      <button type="button" id="search_button"><img src="img/icn-search.svg" alt="Search icon"></button>
    </label>
    `;
 }
@@ -116,8 +117,8 @@ pagination.addEventListener("click", (e) => {
 /* 
 Search filter listener
 */
-
 const searchBar = document.getElementById("search");
+const searchButton = document.getElementById("search_button");
 
 function searchName(database) {
    const input = searchBar.value.toLowerCase();
@@ -133,6 +134,14 @@ function searchName(database) {
    addPagination(pageAmount(displayPerPage, newData.length))
 }
 
-searchBar.addEventListener( "keyup", () => {
-   searchName(data);
+searchBar.addEventListener( "keyup", (e) => {
+   if (e.key === "Enter") {
+      searchName(data);
+   }    
 } );
+
+searchButton.addEventListener( "click", () => {
+   searchName(data);
+})
+
+// a function that returns a new database 
