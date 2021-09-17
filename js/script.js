@@ -3,14 +3,6 @@ Treehouse Techdegree:
 FSJS Project 2 - Data Pagination and Filtering
 */
 
-
-
-/*
-For assistance:
-   Check out the "Project Resources" section of the Instructions tab: https://teamtreehouse.com/projects/data-pagination-and-filtering#instructions
-   Reach out in your Slack community: https://treehouse-fsjs-102.slack.com/app_redirect?channel=unit-2
-*/
-
 const displayPerPage = 9;
 const dataEntries = data.length; // 42 entries
 
@@ -64,12 +56,13 @@ This function will create and insert/append the elements needed for the paginati
 */
 
 function addPagination(pages){
-   let classActive = "";
-   let inner = "";
+   let classActive = ""; //let
+   let inner = ""; //let
    for (let i=0; i < pages; i++) {
       if(i === 0) {
          classActive = "class='active'";
-      } else { classActive = ""; }
+      } else { 
+         classActive = ""; }
       inner += 
       `
       <li> 
@@ -84,7 +77,7 @@ function addPagination(pages){
 Insert search bar
 */
 
-function insertSearch(){
+function insertSearchBar(){
    header.innerHTML = 
    `
    <h2>Students</h2>
@@ -96,27 +89,15 @@ function insertSearch(){
    `;
 }
 
-// Call functions
-insertSearch();
+// Initialize
+insertSearchBar();
 showPage(data, pageTracker)
 addPagination(pageAmount(displayPerPage, dataEntries));
 
 /* 
-Pagination listener
+Search Function
 */
-pagination.addEventListener("click", (e) => {
-   if (e.target.tagName === "BUTTON") {
-      const prevActive = document.querySelector(".active");
-      prevActive.classList = "";
-      e.target.classList = "active";
-      pageTracker = parseInt(e.target.textContent);
-      showPage(data, pageTracker);
-   }
-});
 
-/* 
-Search filter listener
-*/
 const searchBar = document.getElementById("search");
 const searchButton = document.getElementById("search_button");
 
@@ -129,19 +110,39 @@ function searchName(database) {
          newData.push(database[i]);
       }
    }
-   pageTracker = 1; // reset the page tracker
+   return newData;
+}
+
+function displaySearch(newData) {
+   pageTracker = 1; // reset the page tracker when searching
    showPage(newData, pageTracker);
    addPagination(pageAmount(displayPerPage, newData.length))
 }
 
+/* 
+Listeners
+*/
+
+pagination.addEventListener("click", (e) => {
+   if (e.target.tagName === "BUTTON") {
+      const prevActive = document.querySelector(".active");
+      prevActive.classList = "";
+      e.target.classList = "active";
+      pageTracker = parseInt(e.target.textContent);
+      showPage(searchName(data), pageTracker);
+   }
+});
+
+/* 
+Search filter listener
+*/
+
 searchBar.addEventListener( "keyup", (e) => {
    if (e.key === "Enter") {
-      searchName(data);
+      displaySearch(searchName(data));
    }    
 } );
 
 searchButton.addEventListener( "click", () => {
-   searchName(data);
+   displaySearch(searchName(data));
 })
-
-// a function that returns a new database 
