@@ -35,7 +35,7 @@ function showPage(dataList, pageTracker){
             `
             <li class="student-item cf">
                <div class="student-details">
-               <img class="avatar" src=${dataList[i].picture.thumbnail} alt="Profile Picture">
+               <img class="avatar" src=${dataList[i].picture.large} alt="Profile Picture">
                <h3>${dataList[i].name.first} ${dataList[i].name.last}</h3>
                <span class="email">${dataList[i].email}</span>
                </div>
@@ -90,6 +90,7 @@ function insertSearchBar(){
 }
 
 // Initialize
+
 insertSearchBar();
 showPage(data, pageTracker)
 addPagination(pageAmount(displayPerPage, dataEntries));
